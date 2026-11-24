@@ -321,6 +321,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}
 <script src="motor/entorno.js?v=20261124l"></script>
 <script src="motor/jerez_puntos.js?v=20261124l"></script>
 <script src="motor/jerez1989.js?v=20261124l"></script>
+<script src="motor/tabanco3d.js?v=20261124l"></script>
 <script src="motor/vista3d.js?v=20261124l"></script>
 <script>
 {
@@ -414,7 +415,7 @@ function paint(){
 }
 
 function drawTab(popIt){
-  if(v3)v3.tabanco(tabOn,popIt); // (24-11) el tabanco también en 3D
+  if(v3&&v3.tabanco)v3.tabanco(tabOn,popIt); // (24-11) el tabanco también en 3D
   const g=svg.querySelector('#tab');
   if(!tabOn){g.innerHTML='';return}
   const f=-.04,p=at(f),q=at(f+.002),dx=q.x-p.x,dy=q.y-p.y,m=Math.hypot(dx,dy)||1;
@@ -495,8 +496,8 @@ function renderBar(){
   if(w)pourEl.innerHTML=`<h3>Tu copa: ${w.n} · ${w.h}</h3><p><b>Enhorabuena: casi nadie encuentra este tabanco, así que esto solo lo vas a leer tú.</b></p>${w.t.map(x=>`<p>${x}</p>`).join('')}<p>Si me entrevistas, dime «${w.n.toLowerCase()}» al empezar y sabré que pasaste por aquí.</p><p class="small">Solo se puede pedir una copa por visitante.</p>`;
 }
 winesEl.addEventListener('click',e=>{const b=e.target.closest('.wine');if(!b||b.disabled)return;mine=b.dataset.w;try{localStorage.setItem('cv-copa',mine)}catch(e){}renderBar()});
-function openBar(){renderBar();bar.hidden=false;document.getElementById('barX').focus()}
-function closeBar(){bar.hidden=true}
+function openBar(){renderBar();bar.hidden=false;if(v3&&v3.pausar)v3.pausar(true);document.getElementById('barX').focus()}
+function closeBar(){bar.hidden=true;if(v3&&v3.pausar)v3.pausar(false)}
 document.getElementById('barX').addEventListener('click',closeBar);
 bar.addEventListener('click',e=>{if(e.target===bar)closeBar()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!bar.hidden)closeBar()},true);
@@ -513,7 +514,7 @@ const s0=start>0?start:0;
 if(!reduce&&typeof Vista3D!=='undefined'){
   try{
     v3=Vista3D.crear(fig,{
-      paradas:slides.map((s,i)=>({f:fracs[i],html:s.dataset.yr?`${s.dataset.name}<small>${s.dataset.yr}</small>`:s.dataset.name})),
+      paradas:slides.map((s,i)=>({f:fracs[i],nombre:s.dataset.name,anio:s.dataset.yr||'',html:s.dataset.yr?`${s.dataset.name}<small>${s.dataset.yr}</small>`:s.dataset.name})),
       alPulsarParada:i=>go(i),
       alPulsarMeta:toggleEgg,
       alPulsarTabanco:()=>openBar(),
