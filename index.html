@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ricardo Martín Ayala</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE everyday-professional: a CV a recruiter pages through, clear and confident
+   IDEA one lap of a real circuit (Jerez, unnamed) where track distance is time: each milestone sits where it happened
+   PICTURE the circuit drawn from real centreline data; a car drives to the open chapter, red line marks the lap so far
+   COLOUR white ground, F1 red #e10600 header and footer fields, asphalt grey track, concrete panel
+   TYPE Titillium Web 700/900 (motorsport lettering) + Inter
+   LAYOUT laptop: red header, circuit left and chapter deck right, then a full-width band of credentials; phone: stacked */
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#131316);--ink:light-dark(#15151a,#f1f1f3);--mute:light-dark(#585b63,#a7aab1);--panel:light-dark(#f1f1f3,#1c1d21);--line:light-dark(#dcdde1,#33353b);--track:light-dark(#2c2e34,#3b3e45);--edge:light-dark(#c9cbd0,#5a5d65);--red:#e10600;--redk:light-dark(#c40500,#ff3b30)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3{font-family:"Titillium Web",system-ui,sans-serif;letter-spacing:-.02em;line-height:1.05;margin:0}
+a{color:var(--redk)}
+.wrap{max-width:1240px;margin:0 auto}
+.band{padding-block:clamp(22px,3vw,40px);padding-left:max(5vw,16px);padding-right:max(5vw,16px)}
+header.band{background:var(--red);color:#fff}
+header .wrap{display:flex;flex-wrap:wrap;gap:12px 32px;align-items:end;justify-content:space-between}
+header h1{font-size:clamp(36px,5.4vw,60px);font-weight:900}
+header p{margin:6px 0 0;font-size:17px;max-width:46ch}
+.contact{display:flex;flex-direction:column;gap:2px;font-size:15px;text-align:right}
+.contact a{color:#fff;font-weight:600}
+main.band{padding-top:clamp(20px,2.6vw,34px)}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:clamp(20px,3vw,44px);align-items:start}
+.track{position:sticky;top:16px;background:var(--panel);border-radius:14px;padding:16px 16px 12px}
+.readout{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-family:"Titillium Web",sans-serif;font-size:15px;color:var(--mute)}
+.readout b{color:var(--ink);font-size:20px;font-weight:700}
+.fig{position:relative;min-height:540px}
+.fig>svg{position:absolute;inset:0;width:100%;height:100%}
+.fig text{font-family:"Titillium Web",sans-serif;font-size:14px;fill:var(--ink);paint-order:stroke;stroke:var(--panel);stroke-width:4px;stroke-linejoin:round}
+.fig text.yr{font-weight:700;fill:var(--mute)}
+.fig text.on{fill:var(--redk)}
+.fig text.cn{font-size:12px;fill:var(--mute);font-style:italic}
+.st{cursor:pointer}
+#flag{cursor:help}
+/* (24-11) Vista 3D (motor de Box Box): el canvas y las etiquetas tapan el mapa 2D, que queda de reserva */
+.fig.es3d>svg{display:none}
+.fig canvas.v3d{position:absolute;inset:0;width:100%;height:100%;border-radius:10px;display:block;touch-action:pan-y}
+.v3d-capa{position:absolute;inset:0;overflow:hidden;pointer-events:none;border-radius:10px}
+.v3d-et{position:absolute;left:0;top:0;pointer-events:auto;font:700 13px/1.15 "Titillium Web",sans-serif;color:#15151a;background:rgba(255,255,255,.92);border:0;border-radius:6px;padding:3px 7px;white-space:nowrap;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+.v3d-et.parada{cursor:pointer}
+.v3d-et.parada small{display:block;font-weight:600;font-size:11px;color:#585b63}
+.v3d-et.parada.on{background:#e10600;color:#fff}.v3d-et.parada.on small{color:#ffd9d6}
+.v3d-et.meta{cursor:help;font-size:16px;padding:2px 5px}
+.v3d-et.tabanco{cursor:pointer;background:#7a4a24;color:#fff}
+.v3d-et.curva{pointer-events:none;font-style:italic;font-weight:600;background:rgba(21,21,26,.78);color:#fff}
+.scale{font-size:13px;color:var(--mute);margin:4px 0 0}
+.egg{display:none;margin-top:10px;background:var(--bg);border-left:4px solid var(--red);border-radius:8px;padding:12px 14px;font-size:15px}
+.egg.show{display:block}
+#tab{cursor:pointer}
+#tab.pop{animation:pop .5s ease-out}
+@keyframes pop{0%{transform:scale(0)}70%{transform:scale(1.25)}100%{transform:scale(1)}}
+.modal{position:fixed;inset:0;background:rgba(10,10,12,.55);display:grid;place-items:center;padding:16px;z-index:10}
+.modal[hidden]{display:none}
+.sheet{position:relative;background:var(--bg);color:var(--ink);border-radius:16px;max-width:640px;width:100%;max-height:calc(100vh - 32px);overflow:auto;padding:24px clamp(16px,4vw,28px)}
+.sheet h2{font-size:clamp(26px,4vw,34px);font-weight:700;margin:0 40px 6px 0}
+.sheet .x{position:absolute;top:12px;right:12px;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-size:22px;cursor:pointer}
+.wines{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:16px}
+.wine{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 10px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--ink);cursor:pointer;font:inherit;text-align:center}
+.wine:hover:not(:disabled){border-color:var(--red)}
+.wine:disabled{opacity:.35;cursor:not-allowed}
+.wine.mine{border:2px solid var(--red);opacity:1}
+.wine b{font-family:"Titillium Web",sans-serif;font-size:19px}
+.wine span{font-size:13px;color:var(--mute);line-height:1.35}
+.pour{margin-top:18px;border-left:4px solid var(--red);padding:4px 0 4px 16px}
+.pour h3{font-size:22px;font-weight:700;margin-bottom:6px}
+.pour p{margin:6px 0}
+.egg b{font-family:"Titillium Web",sans-serif;font-size:18px;display:block;margin-bottom:2px}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.tabs button{flex:none;font:600 14px/1 Inter,sans-serif;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:0 14px;min-height:40px;cursor:pointer}
+.tabs button[aria-current=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+.deck{position:relative;display:flex;gap:48px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin-top:14px;align-items:start;transition:height .3s}
+.deck::-webkit-scrollbar{display:none}
+.slide{flex:0 0 100%;scroll-snap-align:start}
+.when{font-family:"Titillium Web",sans-serif;font-weight:700;color:var(--redk);font-size:16px}
+.slide h2{font-size:clamp(30px,3.4vw,42px);font-weight:700;margin:4px 0 6px;text-wrap:balance}
+.where{color:var(--mute);margin:0 0 14px;font-weight:500}
+.slide p{max-width:62ch}
+.learn{border-top:1px solid var(--line);margin-top:16px;padding-top:12px}
+.learn h3,.proj h3{font-size:20px;font-weight:700;margin-bottom:6px}
+ul{padding-left:1.1em;margin:6px 0}
+li{margin:4px 0}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 0;padding:0;list-style:none}
+.chips li{margin:0;font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:var(--panel);border:1px solid var(--line)}
+.proj{display:grid;gap:10px;margin-top:10px}
+.proj article{background:var(--panel);border-radius:10px;padding:14px 16px}
+.proj p{margin:0}
+.demo{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-weight:600;min-height:44px}
+.small{font-size:14px;color:var(--mute)}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:20px;border-top:1px solid var(--line);padding-top:14px}
+.nav button,.btn{font:600 15px/1 Inter,sans-serif;min-height:44px;padding:0 18px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;text-decoration:none}
+.go{background:var(--red)!important;border-color:var(--red)!important;color:#fff!important}
+.nav button:disabled{opacity:.35;cursor:default}
+.count{font-family:"Titillium Web",sans-serif;color:var(--mute);font-size:15px;white-space:nowrap}
+.mail{font-family:"Titillium Web",sans-serif;font-size:clamp(22px,3vw,30px);font-weight:700;overflow-wrap:anywhere}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.more{background:var(--panel)}
+.more h2{font-size:clamp(28px,3vw,38px);font-weight:700;margin-bottom:16px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(15em,1fr));gap:18px 28px}
+.cols h3{font-size:19px;font-weight:700;margin-bottom:4px}
+.cols p{margin:0}
+.certs{display:grid;grid-template-columns:repeat(auto-fit,minmax(16em,1fr));gap:12px;margin-bottom:22px}
+.cert{display:block;background:var(--bg);border:2px solid var(--ink);border-radius:10px;padding:14px 16px;color:var(--ink);text-decoration:none}
+.cert:hover{border-color:var(--red)}
+.cert b{font-family:"Titillium Web",sans-serif;font-size:30px;display:block;line-height:1}
+.cert span{font-size:14px;color:var(--mute);display:block;margin-top:4px}
+.cert em{font-style:normal;font-weight:600;color:var(--redk);font-size:14px;display:block;margin-top:8px}
+.courses{list-style:none;padding:0;margin:0}
+.courses li{margin:2px 0}
+footer.band{background:var(--red);color:#fff;padding-block:18px;font-size:14px}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}
+@media(max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}.track{position:static}.fig{min-height:420px}}
+@media(max-width:600px){.contact{text-align:left}.fig{min-height:340px}.readout b{font-size:17px}}
+</style>
+</head>
+<body>
+<header class="band">
+  <div class="wrap">
+    <div>
+      <h1>Ricardo Martín Ayala</h1>
+      <p>Físico, máster en Big Data e IA y consultor de IA en Azure. Este es mi recorrido, en una vuelta.</p>
+    </div>
+    <div class="contact">
+      <a href="mailto:rycardo.martyn@gmail.com">rycardo.martyn@gmail.com</a>
+      <span>Jerez de la Frontera · Español nativo · Inglés C1</span>
+    </div>
+  </div>
+</header>
+
+<main class="band">
+  <div class="wrap grid">
+    <aside class="track" aria-label="Circuito de la trayectoria">
+      <div class="readout"><span>Circuito · 4.428 m</span><b id="rName">Parrilla</b></div>
+      <div class="fig" id="fig"><svg id="svg" role="img" aria-label="Circuito con una parada por cada etapa, separadas según el tiempo transcurrido"></svg></div>
+      <p class="scale">Las paradas están a escala de tiempo: cada año son unos 540 metros de pista.</p>
+      <div class="egg" id="egg" role="status">
+        <b>Bien visto</b>
+        Es el Circuito de Jerez – Ángel Nieto, curva a curva, con el trazado real de OpenStreetMap. Soy de Jerez, así que mi carrera corre por mi circuito.
+      </div>
+    </aside>
+
+    <section aria-label="Capítulos">
+      <nav class="tabs" id="tabs" aria-label="Capítulos"></nav>
+      <div class="deck" id="deck" tabindex="0" aria-roledescription="presentación">
+
+        <article class="slide" id="intro" data-name="Parrilla" data-yr="" data-t="2018.5">
+          <div class="when">Parrilla de salida</div>
+          <h2>Datos, IA y cloud, con cabeza de físico</h2>
+          <p>Graduado en Física y Máster en Big Data e Inteligencia Artificial, con experiencia en el desarrollo e implementación de soluciones de IA y arquitecturas cloud en Azure. He trabajado en automatización de procesos, integración de servicios, análisis de datos y aplicaciones basadas en modelos predictivos.</p>
+          <ul class="chips"><li>Python</li><li>SQL</li><li>Azure AI</li><li>Microsoft Fabric</li><li>Power BI</li><li>IA generativa</li></ul>
+          <div class="learn">
+            <h3>En esta vuelta verás</h3>
+            <ul>
+              <li>Cómo pasé de la física a los datos</li>
+              <li>Tres proyectos de IA en Azure para clientes reales</li>
+              <li>Dos proyectos propios con demo que puedes probar</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="slide" id="fisica" data-name="Física" data-yr="2018" data-t="2018.67">
+          <div class="when">Sept 2018 – Jul 2023</div>
+          <h2>Empecé por entender cómo funcionan las cosas</h2>
+          <p class="where">Grado en Física · Universidad de Sevilla</p>
+          <p>La física me dio la base que hoy uso con datos: traducir un sistema real a un modelo matemático, desconfiar de un resultado hasta comprobarlo y atacar problemas que no vienen resueltos en el libro.</p>
+          <div class="learn">
+            <h3>Lo que me llevé</h3>
+            <ul>
+              <li>Álgebra lineal, estadística y modelado matemático</li>
+              <li>Programación científica: Matlab y R</li>
+              <li>Documentación técnica en LaTeX</li>
+              <li>Aprender rápido cosas difíciles</li>
+            </ul>
+          </div>
+          <div class="proj">
+            <article>
+              <h3>TFG · El teorema de Perron-Frobenius y el algoritmo de PageRank</h3>
+              <p>Las matemáticas detrás del buscador de Google: cómo ordenar páginas a partir solo de sus enlaces, con un ejemplo propio de PageRank personalizado.</p>
+              <a class="demo" href="TFG_PAGE_RANK.pdf" target="_blank" rel="noopener">Leer el TFG (PDF) ↗</a>
+            </article>
+          </div>
+        </article>
+
+        <article class="slide" id="master" data-name="Máster" data-yr="2024" data-t="2024.75">
+          <div class="when">Oct 2024 – May 2025</div>
+          <h2>Llevé la física al mundo de los datos</h2>
+          <p class="where">Máster en Big Data &amp; IA · Instituto de Estudios Cajasol</p>
+          <p>En el máster aprendí el ciclo completo del machine learning: preparar datos, construir variables, entrenar modelos y ponerlos en manos de un usuario. Lo apliqué a algo que me apasiona, la Fórmula 1.</p>
+          <div class="proj">
+            <article>
+              <h3>F1 Historical Simulator · TFM</h3>
+              <ul>
+                <li>Modelo predictivo en Python que simula carreras entre pilotos de distintas épocas</li>
+                <li>Base de datos propia en SQL, con modelado estadístico y parámetros que elige el usuario</li>
+                <li>App interactiva desplegada con Streamlit</li>
+              </ul>
+              <a class="demo" href="https://minimundialf1.streamlit.app/" target="_blank" rel="noopener">Probar la demo ↗</a>
+            </article>
+          </div>
+          <ul class="chips"><li>Pandas</li><li>NumPy</li><li>Scikit-learn</li><li>SQL</li><li>Streamlit</li><li>Estadística aplicada</li></ul>
+        </article>
+
+        <article class="slide" id="tithink" data-name="tiThink" data-yr="2025" data-t="2025.75">
+          <div class="when">Oct 2025 – Jul 2026</div>
+          <h2>IA en Azure para clientes reales</h2>
+          <p class="where">Consultor IA · tiThink</p>
+          <div class="proj">
+            <article>
+              <h3>Automatización de facturas</h3>
+              <p>Sistema de clasificación documental y extracción automática de datos con Azure AI Document Intelligence: modelos personalizados por proveedor, con entrenamiento y mejora continua.</p>
+            </article>
+            <article>
+              <h3>Power BI Embedded</h3>
+              <p>Acceso seguro a dashboards para clientes externos sin licencias individuales, con Azure Functions y gestión dinámica de capacidades de Microsoft Fabric para ajustar costes.</p>
+            </article>
+            <article>
+              <h3>Catalogación de imágenes</h3>
+              <p>Arquitectura de procesamiento automático con Blob Storage, Computer Vision y Cosmos DB para generar, guardar y consultar metadatos de imágenes.</p>
+            </article>
+          </div>
+          <ul class="chips"><li>Document Intelligence</li><li>Azure Functions</li><li>Blob Storage</li><li>Cosmos DB</li><li>Computer Vision</li><li>Fabric</li><li>Python</li></ul>
+        </article>
+
+        <article class="slide" id="boxbox" data-name="Box Box" data-yr="2026" data-t="2026.05">
+          <div class="when">2026 – actualidad</div>
+          <h2>Del modelo estadístico a un juego en tiempo real</h2>
+          <p class="where">Box Box · Manager de F1 en 3D (beta) · proyecto personal</p>
+          <p>Convertí el simulador de mi TFM en un juego de gestión para navegador y móvil: diriges la estrategia de un equipo (paradas, neumáticos, ritmo y duelos) mientras la carrera ocurre.</p>
+          <div class="learn">
+            <h3>Qué hay debajo</h3>
+            <ul>
+              <li>Simulación propia: física por coche, trazada de mínima curvatura, degradación de neumáticos, clima, Safety Car/VSC e IA de estrategia para los rivales</li>
+              <li>Ocho circuitos reconstruidos con datos reales y un modo histórico calibrado con los modelos del TFM</li>
+              <li>Desarrollo apoyado en IA generativa para los componentes más complejos del motor 3D</li>
+            </ul>
+          </div>
+          <a class="demo" href="https://rixomg.github.io/Rixomg-boxbox/" target="_blank" rel="noopener">Probar la beta ↗</a>
+          <p class="small">Beta de acceso restringido: solo disponible desde este enlace.</p>
+          <ul class="chips"><li>JavaScript</li><li>Three.js (WebGL)</li><li>Python</li><li>PWA</li></ul>
+        </article>
+
+        <article class="slide" id="contacto" data-name="Meta" data-yr="Hoy" data-t="2026.9">
+          <div class="when">Bandera a cuadros · hoy</div>
+          <h2>¿Hablamos?</h2>
+          <p>Busco un puesto en datos e IA donde construir soluciones que lleguen a producción. Si encajo en lo que buscas, escríbeme.</p>
+          <div class="mail">rycardo.martyn@gmail.com</div>
+          <div class="row">
+            <a class="btn go" href="mailto:rycardo.martyn@gmail.com">Enviar un email</a>
+            <button class="btn" id="copy" type="button">Copiar email</button>
+            <span class="small" id="copied" aria-live="polite"></span>
+          </div>
+          <p class="small">Más abajo tienes mis certificaciones con enlace a la credencial.</p>
+        </article>
+      </div>
+
+      <div class="nav">
+        <button type="button" id="prev">← Anterior</button>
+        <span class="count" id="count">1 / 7</span>
+        <button type="button" id="next" class="go">Siguiente →</button>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div class="modal" id="bar" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="barT">
+    <button class="x" type="button" id="barX" aria-label="Cerrar">×</button>
+    <h2 id="barT">Tabanco de la recta de meta</h2>
+    <p>En Jerez no se pasa por delante de un tabanco sin parar. Elige una copa, pero solo una: la que pidas será la tuya y no podrás cambiarla.</p>
+    <div class="wines" id="wines"></div>
+    <div class="pour" id="pour" hidden></div>
+  </div>
+</div>
+
+<section class="band more" aria-label="Certificaciones y herramientas">
+  <div class="wrap">
+    <h2>Certificaciones y herramientas</h2>
+    <div class="certs">
+      <a class="cert" href="https://learn.microsoft.com/api/credentials/share/en-us/RicardoSebastinMartnAyala-0828/C03CD9CEFF024E40?sharingId=71AB62B9C0A7F650" target="_blank" rel="noopener"><b>DP-600</b><span>Microsoft Certified: Ingeniero de Analítica en Microsoft Fabric</span><em>Ver credencial ↗</em></a>
+      <a class="cert" href="https://learn.microsoft.com/api/credentials/share/es-es/RicardoSebastinMartnAyala-0828/538D1B67052ABDFA?sharingId=71AB62B9C0A7F650" target="_blank" rel="noopener"><b>AZ-900</b><span>Microsoft Certified: Aspectos básicos de Azure</span><em>Ver credencial ↗</em></a>
+    </div>
+    <div class="cols">
+      <div><h3>Lenguajes</h3><p>Python, SQL, R, Matlab, LaTeX</p></div>
+      <div><h3>Cloud e IA (Azure)</h3><p>Document Intelligence, Computer Vision, Blob Storage, Functions, Cosmos DB, Microsoft Fabric</p></div>
+      <div><h3>BI y visualización</h3><p>Power BI (Embedded, RLS), Qlik Sense, Excel</p></div>
+      <div><h3>Data y ML</h3><p>Pandas, NumPy, Scikit-learn, feature engineering, entrenamiento de modelos</p></div>
+      <div><h3>Idiomas</h3><p>Español nativo · Inglés C1 (CAE, University of Cambridge)</p></div>
+      <div><h3>Cursos</h3>
+        <ul class="courses">
+          <li><a href="https://www.coursera.org/account/accomplishments/verify/683MA368B9RK" target="_blank" rel="noopener">IBM · ¿Qué es Data Science?</a></li>
+          <li><a href="https://www.coursera.org/account/accomplishments/verify/TFVLX5QPALHP" target="_blank" rel="noopener">IBM · Herramientas para Data Science</a></li>
+          <li><a href="https://www.coursera.org/learn/data-science-methodology/home/welcome" target="_blank" rel="noopener">IBM · Metodología de Data Science</a></li>
+          <li><a href="https://www.coursera.org/account/accomplishments/verify/685L5SMTCXVW" target="_blank" rel="noopener">IBM · Python para Data Science e IA</a></li>
+          <li><a href="https://www.coursera.org/account/accomplishments/verify/XUCDWNGFBR4W" target="_blank" rel="noopener">Microsoft · Preparación de datos con Excel</a></li>
+          <li>Data Science for Business · Tu primera semana como Data Scientist</li>
+        </ul>
+      </div>    </div>
+  </div>
+</section>
+
+<footer class="band"><div class="wrap"><span>Ricardo Martín Ayala · Datos e IA</span><span>Usa las flechas ← → para avanzar</span></div></footer>
+
+<!-- (24-11) Motor 3D: copia de Box Box (Three.js r158 + pista). Subir ?v= al cambiar algo de motor/. Orden: three → config → utilidades → texturas → coche → pista → Jerez → vista -->
+<script src="motor/three.min.js?v=20261124l"></script>
+<script src="motor/config_cv.js?v=20261124l"></script>
+<script src="motor/utilidades.js?v=20261124l"></script>
+<script src="motor/texturas.js?v=20261124l"></script>
+<script src="motor/cascos.js?v=20261124l"></script>
+<script src="motor/modeloCoche.js?v=20261124l"></script>
+<script src="motor/trazado.js?v=20261124l"></script>
+<script src="motor/constructorPista.js?v=20261124l"></script>
+<script src="motor/entorno.js?v=20261124l"></script>
+<script src="motor/jerez_puntos.js?v=20261124l"></script>
+<script src="motor/jerez1989.js?v=20261124l"></script>
+<script src="motor/vista3d.js?v=20261124l"></script>
+<script>
+{
+const TRACK=[[16,-174],[4,-206],[-78,-400],[-79,-406],[-80,-413],[-80,-420],[-79,-426],[-76,-433],[-73,-438],[-70,-442],[-65,-446],[-60,-450],[-54,-452],[-43,-453],[128,-454],[136,-454],[142,-452],[147,-448],[152,-444],[155,-439],[157,-435],[158,-429],[159,-425],[159,-420],[157,-415],[155,-411],[151,-405],[146,-400],[104,-369],[94,-358],[87,-348],[83,-341],[80,-334],[79,-327],[77,-321],[76,-315],[77,-305],[82,-194],[83,-186],[84,-181],[85,-175],[87,-168],[89,-161],[92,-152],[95,-145],[100,-138],[104,-130],[111,-122],[117,-116],[124,-108],[133,-103],[142,-97],[151,-92],[162,-88],[172,-85],[189,-82],[204,-80],[438,-47],[450,-45],[464,-40],[471,-37],[478,-32],[486,-26],[493,-18],[501,-9],[506,1],[510,12],[513,20],[514,31],[514,40],[514,49],[513,59],[512,68],[510,76],[507,83],[503,92],[498,102],[491,111],[483,120],[469,132],[331,241],[258,301],[194,353],[110,421],[25,490],[7,503],[-1,507],[-8,509],[-16,508],[-24,506],[-31,501],[-35,496],[-39,489],[-40,481],[-39,472],[-36,464],[45,304],[48,295],[51,285],[53,275],[53,264],[53,254],[52,245],[50,236],[46,226],[41,216],[36,208],[32,201],[-78,62],[-87,53],[-95,46],[-106,40],[-118,36],[-130,34],[-141,33],[-153,34],[-167,37],[-177,41],[-184,44],[-192,48],[-204,57],[-213,65],[-223,76],[-230,86],[-237,98],[-241,109],[-297,267],[-302,279],[-305,283],[-308,288],[-313,292],[-318,295],[-323,298],[-329,299],[-336,300],[-344,299],[-352,298],[-360,294],[-423,248],[-432,240],[-437,233],[-440,228],[-441,221],[-442,212],[-440,204],[-437,196],[-336,-8],[-325,-29],[-315,-40],[-307,-47],[-296,-54],[-284,-60],[-267,-65],[-251,-66],[-231,-65],[-212,-63],[-117,-55],[-109,-53],[-101,-51],[-94,-48],[-86,-41],[53,129],[95,181],[102,190],[107,193],[111,195],[116,197],[122,197],[129,197],[137,195],[142,193],[147,189],[151,182],[154,175],[155,168],[155,160],[153,153],[151,147]];
+const CORNERS=[["Expo '92",8],["Michelin",21],["Sito Pons",69],["Dani Pedrosa",89],["Aspar",117],["Ángel Nieto",132],["Peluqui",142],["Crivillé",151],["Ferrari",159],["Lorenzo",170]];
+
+const deck=document.getElementById('deck');
+const slides=[...deck.querySelectorAll('.slide')];
+const tabs=document.getElementById('tabs');
+const svg=document.getElementById('svg');
+const fig=document.getElementById('fig');
+const rName=document.getElementById('rName');
+const count=document.getElementById('count');
+const prev=document.getElementById('prev');
+const next=document.getElementById('next');
+const egg=document.getElementById('egg');
+const T0=2018.67,T1=2026.9;
+const fracs=slides.map(s=>(+s.dataset.t-T0)/(T1-T0));
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let cur=-1,carF=fracs[0],anim=null,path=null,L=0,eggOn=false,P=[],v3=null,TW=17,tabOn=false,lastAng=null,painted=-2;
+
+tabs.innerHTML=slides.map((s,i)=>`<button type="button" data-i="${i}">${s.dataset.name}</button>`).join('');
+
+const at=f=>path.getPointAtLength((((f%1)+1)%1)*L);
+
+function build(){
+  const W=fig.clientWidth,H=fig.clientHeight,narrow=W<440;
+  const pad=narrow?36:40;
+  const xs=TRACK.map(p=>p[0]),ys=TRACK.map(p=>p[1]);
+  const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
+  const k=Math.min((W-2*pad)/(x1-x0),(H-2*pad)/(y1-y0));
+  const ox=(W-(x1-x0)*k)/2,oy=(H-(y1-y0)*k)/2;
+  P=TRACK.map(p=>[ox+(p[0]-x0)*k,oy+(p[1]-y0)*k]);
+  const d='M'+P.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join('L')+'Z';
+  const tw=narrow?12:17;
+  svg.innerHTML=`
+    <path d="${d}" fill="none" stroke="#000" stroke-opacity=".13" stroke-width="${tw+8}" transform="translate(3,5)" stroke-linejoin="round"/>
+    <path d="${d}" fill="none" stroke="var(--edge)" stroke-width="${tw+6}" stroke-linejoin="round"/>
+    <path id="asph" d="${d}" fill="none" stroke="var(--track)" stroke-width="${tw}" stroke-linejoin="round"/>
+    <path d="${d}" fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="1.2" stroke-dasharray="8 10"/>
+    <path id="prog" d="${d}" fill="none" stroke="var(--red)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <g id="corners"></g><g id="flag"></g><g id="tab"></g><g id="stations"></g><g id="car"><g id="carb"><ellipse cx="1" cy="3" rx="13" ry="6" fill="#000" opacity=".18"/><rect x="-13" y="-7" width="5" height="14" rx="1.5" fill="#111"/><rect x="-11" y="-4" width="22" height="8" rx="4" fill="var(--red)"/><rect x="9" y="-6" width="4" height="12" rx="1.5" fill="#111"/><rect x="-6" y="-8" width="5" height="3" rx="1" fill="#111"/><rect x="-6" y="5" width="5" height="3" rx="1" fill="#111"/><rect x="3" y="-8" width="5" height="3" rx="1" fill="#111"/><rect x="3" y="5" width="5" height="3" rx="1" fill="#111"/><circle cx="0" cy="0" r="2.4" fill="#fff"/></g></g>`;
+  path=svg.querySelector('#asph');L=path.getTotalLength();
+  const cx=W/2,cy=H/2;
+  const a=at(0),b=at(.002),ang=Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI;
+  let chk='';for(let r=0;r<2;r++)for(let c=0;c<Math.ceil(tw/3.5)+1;c++)chk+=`<rect x="${-3.5+r*3.5}" y="${-tw/2-3+c*3.5}" width="3.5" height="3.5" fill="${(r+c)%2?'#111':'#fff'}"/>`;
+  const fl=svg.querySelector('#flag');
+  fl.innerHTML=`<g transform="translate(${a.x},${a.y}) rotate(${ang})"><rect x="-14" y="-${tw}" width="28" height="${tw*2}" fill="transparent"/>${chk}</g><title>¿Qué circuito es?</title>`;
+  fl.addEventListener('click',toggleEgg);
+  const LB={1:[-16,-8,'end'],2:[-16,-6,'end'],3:[16,-6,'start'],4:[-14,24,'end'],5:[16,-8,'start']};
+  const lab=fracs.map((f,i)=>{
+    if(!LB[i])return '';
+    const p=at(f),[ox2,oy2,anchor]=LB[i],ly=p.y+oy2;let lx=p.x+ox2;
+    const lw=(narrow?4:6)*8;if(anchor==='end'&&lx-lw<2)lx=lw+2;if(anchor==='start'&&lx+lw>W-2)lx=W-2-lw;
+    const s=slides[i],yr=s.dataset.yr,nm=s.dataset.name;
+    const txt=narrow?`<text x="${lx}" y="${ly+12}" text-anchor="${anchor}" data-t="${i}">${yr}</text>`
+      :`<text class="yr" x="${lx}" y="${ly}" text-anchor="${anchor}">${yr}</text><text x="${lx}" y="${ly+16}" text-anchor="${anchor}" data-t="${i}">${nm}</text>`;
+    if(i===slides.length-1)return `<g class="st" data-i="${i}">${txt}</g>`;
+    return `<g class="st" data-i="${i}"><circle cx="${p.x}" cy="${p.y}" r="${narrow?5.5:7}" data-c="${i}" fill="var(--panel)" stroke="var(--ink)" stroke-width="2.5"/>${txt}</g>`;
+  }).join('');
+  svg.querySelector('#stations').innerHTML=lab;
+  svg.querySelectorAll('.st').forEach(g=>g.addEventListener('click',()=>go(+g.dataset.i)));
+  drawCorners(W,cx,cy,tw);
+  TW=tw;drawTab(false);
+  paint();
+}
+
+function drawCorners(W,cx,cy,tw){
+  const g=svg.querySelector('#corners');
+  if(!eggOn||W<440){g.innerHTML='';return}
+  g.innerHTML=CORNERS.map(([n,i])=>{const p=P[i];let dx=p[0]-cx,dy=p[1]-cy;const m=Math.hypot(dx,dy)||1;
+    const x=p[0]+dx/m*(tw/2+8),y=p[1]+dy/m*(tw/2+8)+4;
+    const w=n.length*6.6;let anc=dx>0?'start':'end',xx=x;if(anc==='end'&&xx-w<4)xx=w+4;if(anc==='start'&&xx+w>W-4)xx=W-4-w;
+    return `<text class="cn" x="${xx}" y="${y}" text-anchor="${anc}">${n}</text>`}).join('');
+}
+
+function toggleEgg(){eggOn=!eggOn;egg.classList.toggle('show',eggOn);build();fit();if(v3)v3.curvas(eggOn)}
+
+function paint(){
+  if(!path)return;
+  const f=Math.min(carF,.9995),d=10/L;
+  svg.querySelector('#prog').setAttribute('stroke-dasharray',`${Math.max(0,Math.min(1,carF))*L} ${L+10}`);
+  const p=at(f),a=at(f-d),b=at(f+d);
+  let ang=Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI;
+  if(lastAng!==null){let dd=((ang-lastAng+540)%360)-180;ang=lastAng+dd*.35}
+  lastAng=ang;
+  svg.querySelector('#carb').setAttribute('transform',`translate(${p.x.toFixed(2)},${p.y.toFixed(2)}) rotate(${ang.toFixed(2)})`);
+  if(painted!==cur){painted=cur;
+    svg.querySelectorAll('[data-c]').forEach(c=>{const i=+c.dataset.c;const done=i<=cur;c.setAttribute('fill',done?'var(--red)':'var(--panel)');c.setAttribute('stroke',done?'var(--red)':'var(--ink)')});
+    svg.querySelectorAll('[data-t]').forEach(t=>t.classList.toggle('on',+t.dataset.t===cur));}
+}
+
+function drawTab(popIt){
+  if(v3)v3.tabanco(tabOn,popIt); // (24-11) el tabanco también en 3D
+  const g=svg.querySelector('#tab');
+  if(!tabOn){g.innerHTML='';return}
+  const f=-.04,p=at(f),q=at(f+.002),dx=q.x-p.x,dy=q.y-p.y,m=Math.hypot(dx,dy)||1;
+  const x=p.x-dy/m*(TW/2+20),y=p.y+dx/m*(TW/2+20);
+  g.innerHTML=`<title>¿Una copa?</title><g transform="translate(${x.toFixed(1)},${y.toFixed(1)})">
+    <ellipse cx="0" cy="13" rx="17" ry="4" fill="#000" opacity=".15"/>
+    <rect x="-14" y="-2" width="28" height="14" rx="2" fill="#7a4a24"/>
+    <rect x="-14" y="-2" width="28" height="3" fill="#a06a3a"/>
+    <rect x="-12" y="-16" width="2" height="15" fill="#555"/><rect x="10" y="-16" width="2" height="15" fill="#555"/>
+    ${[0,1,2,3,4,5,6].map(i=>`<path d="M${-16+i*32/7},-16h${32/7}v6a${16/7},${16/7} 0 0 1 ${-32/7},0z" fill="${i%2?'#fff':'var(--red)'}"/>`).join('')}
+    <ellipse cx="0" cy="5" rx="5" ry="6" fill="#5a3216"/><line x1="-5" y1="3" x2="5" y2="3" stroke="#2a160a"/><line x1="-5" y1="7" x2="5" y2="7" stroke="#2a160a"/>
+    <rect x="-22" y="-24" width="44" height="48" fill="transparent"/></g>`;
+  if(popIt){g.classList.remove('pop');void g.getBBox();g.classList.add('pop')}
+}
+
+function driveTo(f){
+  if(anim)cancelAnimationFrame(anim);
+  if(v3){v3.activa(cur);v3.irA(f,reduce)} // (24-11) el coche 3D conduce hasta la parada (o vuelve atrás por el aire)
+  if(reduce){if(f>=0)tabOn=true,drawTab(false);carF=f;paint();return}
+  const from=carF,slow=from<0&&f>=0&&f<.01,t0=performance.now(),dur=slow?4200:Math.min(2000,700+Math.abs(f-from)*2600);
+  if(slow&&!tabOn){setTimeout(()=>{tabOn=true;drawTab(true)},1500)}
+  const step=t=>{const k=Math.min(1,(t-t0)/dur),e=slow?Math.sin(k*Math.PI/2):-(Math.cos(Math.PI*k)-1)/2;carF=from+(f-from)*e;paint();if(k<1)anim=requestAnimationFrame(step)};
+  anim=requestAnimationFrame(step);
+}
+
+function fit(){if(cur>=0)deck.style.height=slides[cur].offsetHeight+'px'}
+
+function setActive(i,fromScroll){
+  if(i===cur&&fromScroll)return;
+  cur=i;
+  rName.textContent=slides[i].dataset.name;
+  count.textContent=`${i+1} / ${slides.length}`;
+  prev.disabled=i===0;next.disabled=i===slides.length-1;
+  tabs.querySelectorAll('button').forEach((b,j)=>{b.setAttribute('aria-current',j===i?'true':'false');if(j===i)b.scrollIntoView({block:'nearest',inline:'nearest'})});
+  try{history.replaceState(null,'','#'+slides[i].id)}catch(e){}
+  driveTo(fracs[i]);fit();
+}
+
+let st=null,lock=0;
+function go(i){
+  i=Math.max(0,Math.min(slides.length-1,i));
+  lock=performance.now()+900;
+  deck.scrollTo({left:slides[i].offsetLeft,behavior:reduce?'auto':'smooth'});
+  setActive(i);
+}
+const idx=()=>{let b=0,d=1e9;slides.forEach((s,i)=>{const x=Math.abs(s.offsetLeft-deck.scrollLeft);if(x<d){d=x;b=i}});return b};
+deck.addEventListener('scroll',()=>{clearTimeout(st);st=setTimeout(()=>{if(performance.now()>lock)setActive(idx(),true)},120)});
+prev.addEventListener('click',()=>go(cur-1));
+next.addEventListener('click',()=>go(cur+1));
+tabs.addEventListener('click',e=>{const b=e.target.closest('button');if(b)go(+b.dataset.i)});
+document.addEventListener('keydown',e=>{
+  if(e.target.matches('input')||!document.getElementById('bar').hidden)return;
+  if(e.key==='ArrowRight'){e.preventDefault();go(cur+1)}
+  if(e.key==='ArrowLeft'){e.preventDefault();go(cur-1)}
+  if(e.key==='j'||e.key==='J')toggleEgg();
+});
+window.addEventListener('hashchange',()=>{const i=slides.findIndex(s=>'#'+s.id===location.hash);if(i>=0&&i!==cur)go(i)});
+
+document.getElementById('copy').addEventListener('click',async()=>{
+  const out=document.getElementById('copied');
+  try{await navigator.clipboard.writeText('rycardo.martyn@gmail.com');out.textContent='Copiado'}
+  catch(e){out.textContent='Selecciona el email de arriba para copiarlo'}
+});
+
+
+const WINES=[
+  {id:'fino',n:'Fino',c:'#e6d27a',d:'Seco y pálido, criado bajo el velo de flor.',h:'Ajedrez',t:['Juego al ajedrez online con bastante elo.','Una partida es un problema de decisión puro: los motores como Stockfish o AlphaZero evalúan cada posición con búsqueda y redes neuronales. Es lo mismo que me gusta hacer con datos: convertir una situación en un número con el que decidir.']},
+  {id:'amontillado',n:'Amontillado',c:'#c3832c',d:'Empieza como fino y termina envejeciendo al aire.',h:'Calistenia',t:['Entreno calistenia: progresiones que se miden, poco a poco y sin atajos, como entrenar un modelo.','Ahora mismo estoy construyendo un proyecto de IA para calistenia. Pronto estará en esta vuelta.']},
+  {id:'oloroso',n:'Oloroso',c:'#86401a',d:'Crianza al aire, sin velo: más cuerpo e intensidad.',h:'Música',t:['Hago música y tengo mi propio canal.','Es la parte de mí que crea algo desde cero sin que nadie se lo pida, la misma que ha hecho esta web.']},
+  {id:'cream',n:'Cream',c:'#4b1b0b',d:'Oloroso endulzado: el más goloso de la bodega.',h:'El motor',t:['Seguro que ya lo habías adivinado: me encanta la Fórmula 1.','De ahí salieron mi TFM y Box Box, y por eso esta vuelta es en Jerez, mi ciudad y la del Gran Premio de motos.']}];
+const bar=document.getElementById('bar'),winesEl=document.getElementById('wines'),pourEl=document.getElementById('pour');
+let mine=null;try{mine=localStorage.getItem('cv-copa')}catch(e){}
+const glass=c=>`<svg width="34" height="54" viewBox="0 0 34 54" aria-hidden="true"><path d="M5,2 L29,2 Q30,20 17,30 Q4,20 5,2z" fill="none" stroke="var(--ink)" stroke-width="1.6"/><path d="M7,12 L27,12 Q26,22 17,28 Q8,22 7,12z" fill="${c}"/><line x1="17" y1="30" x2="17" y2="48" stroke="var(--ink)" stroke-width="1.6"/><line x1="9" y1="50" x2="25" y2="50" stroke="var(--ink)" stroke-width="2" stroke-linecap="round"/></svg>`;
+function renderBar(){
+  winesEl.innerHTML=WINES.map(w=>`<button type="button" class="wine${mine===w.id?' mine':''}" data-w="${w.id}" ${mine&&mine!==w.id?'disabled':''}>${glass(w.c)}<b>${w.n}</b><span>${w.d}</span></button>`).join('');
+  const w=WINES.find(x=>x.id===mine);
+  pourEl.hidden=!w;
+  if(w)pourEl.innerHTML=`<h3>Tu copa: ${w.n} · ${w.h}</h3><p><b>Enhorabuena: casi nadie encuentra este tabanco, así que esto solo lo vas a leer tú.</b></p>${w.t.map(x=>`<p>${x}</p>`).join('')}<p>Si me entrevistas, dime «${w.n.toLowerCase()}» al empezar y sabré que pasaste por aquí.</p><p class="small">Solo se puede pedir una copa por visitante.</p>`;
+}
+winesEl.addEventListener('click',e=>{const b=e.target.closest('.wine');if(!b||b.disabled)return;mine=b.dataset.w;try{localStorage.setItem('cv-copa',mine)}catch(e){}renderBar()});
+function openBar(){renderBar();bar.hidden=false;document.getElementById('barX').focus()}
+function closeBar(){bar.hidden=true}
+document.getElementById('barX').addEventListener('click',closeBar);
+bar.addEventListener('click',e=>{if(e.target===bar)closeBar()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!bar.hidden)closeBar()},true);
+svg.addEventListener('click',e=>{if(e.target.closest('#tab'))openBar()});
+
+const ro=new ResizeObserver(()=>{build();fit();if(cur>=0)deck.scrollTo({left:slides[cur].offsetLeft,behavior:'auto'})});
+ro.observe(fig);
+const ro2=new ResizeObserver(fit);slides.forEach(s=>ro2.observe(s));
+
+const start=slides.findIndex(s=>'#'+s.id===location.hash);
+const s0=start>0?start:0;
+// (24-11) VISTA 3D con el motor de Box Box (carpeta motor/). Si WebGL falla o el usuario pide
+// "reducir movimiento", se queda el mapa 2D de siempre
+if(!reduce&&typeof Vista3D!=='undefined'){
+  try{
+    v3=Vista3D.crear(fig,{
+      paradas:slides.map((s,i)=>({f:fracs[i],html:s.dataset.yr?`${s.dataset.name}<small>${s.dataset.yr}</small>`:s.dataset.name})),
+      alPulsarParada:i=>go(i),
+      alPulsarMeta:toggleEgg,
+      alPulsarTabanco:()=>openBar(),
+    });
+    fig.classList.add('es3d');
+    v3.irA(fracs[s0],true);
+  }catch(e){console.warn('Vista 3D no disponible, se usa el mapa 2D:',e);v3=null;fig.classList.remove('es3d');fig.querySelectorAll('canvas.v3d,.v3d-capa').forEach(n=>n.remove())}
+}
+carF=fracs[s0];try{tabOn=s0>0||!!localStorage.getItem('cv-copa')}catch(e){tabOn=s0>0}build();
+requestAnimationFrame(()=>{deck.scrollTo({left:slides[s0].offsetLeft,behavior:'auto'});setActive(s0)});
+}
+</script>
+</body>
+</html>
